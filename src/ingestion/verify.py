@@ -8,8 +8,13 @@ from __future__ import annotations
 import traceback
 from pathlib import Path
 
-from src.ingestion.metadata import build_metadata, save_label_map, validate_audio_files
+from src.ingestion.metadata import (
+    build_metadata,
+    save_label_map,
+    validate_audio_files,
+)
 from src.utils.helpers import load_config
+
 
 def main() -> None:
     cfg = load_config()

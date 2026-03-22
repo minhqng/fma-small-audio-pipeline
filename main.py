@@ -14,7 +14,11 @@ from src.ingestion.dataset_builder import (
     push_to_hub,
     split_dataset,
 )
-from src.ingestion.metadata import build_metadata, save_label_map, validate_audio_files
+from src.ingestion.metadata import (
+    build_metadata,
+    save_label_map,
+    validate_audio_files,
+)
 from src.utils.helpers import (
     compute_global_stats,
     get_device,
@@ -22,6 +26,7 @@ from src.utils.helpers import (
     load_config,
     seed_everything,
 )
+
 
 def main() -> None:
     # Phase 0 -- Setup (all constants from Hydra config)

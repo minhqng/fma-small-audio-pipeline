@@ -4,6 +4,7 @@ import json
 import os
 import random
 from pathlib import Path
+from typing import cast
 
 import datasets
 import numpy as np
@@ -11,6 +12,7 @@ import torch
 from dotenv import load_dotenv
 from omegaconf import DictConfig, OmegaConf
 from tqdm import tqdm
+
 
 def seed_everything(seed: int) -> None:
     """Set all random seeds for reproducibility."""
@@ -28,7 +30,7 @@ def get_device() -> torch.device:
 
 def load_config(config_path: str = "configs/config.yaml") -> DictConfig:
     """Load Hydra/OmegaConf config from YAML."""
-    return OmegaConf.load(config_path)
+    return cast(DictConfig, OmegaConf.load(config_path))
 
 def get_hf_token(cfg: DictConfig | None = None) -> str:
     """
@@ -48,7 +50,10 @@ def get_hf_token(cfg: DictConfig | None = None) -> str:
         )
     return token
 
-def compute_global_stats(cfg: DictConfig, token: str) -> dict[str, list[float]]:
+def compute_global_stats(
+    cfg: DictConfig,
+    token: str,
+) -> dict[str, list[float] | int]:
     """
     Compute per-frequency-bin mean and std over the TRAINING split
     using streaming mode (IterableDataset) and Welford's online algorithm.

@@ -132,12 +132,21 @@ def parse_fma_tracks(csv_path: Path, subset: str = "small") -> pl.DataFrame:
 
     print(f"[INFO] Mapped columns: {target_cols}")
 
+    track_id_col = target_cols["track_id"]
+    genre_top_col = target_cols["genre_top"]
+    artist_id_col = target_cols["artist_id"]
+    subset_col = target_cols["subset"]
+    assert track_id_col is not None
+    assert genre_top_col is not None
+    assert artist_id_col is not None
+    assert subset_col is not None
+
     # Step 4: Select and cast
     df = df.select([
-        pl.col(target_cols["track_id"]).cast(pl.Int64).alias("track_id"),
-        pl.col(target_cols["genre_top"]).str.strip_chars().alias("genre_top"),
-        pl.col(target_cols["artist_id"]).cast(pl.Int64).alias("artist_id"),
-        pl.col(target_cols["subset"]).str.strip_chars().alias("subset"),
+        pl.col(track_id_col).cast(pl.Int64).alias("track_id"),
+        pl.col(genre_top_col).str.strip_chars().alias("genre_top"),
+        pl.col(artist_id_col).cast(pl.Int64).alias("artist_id"),
+        pl.col(subset_col).str.strip_chars().alias("subset"),
     ])
 
     #

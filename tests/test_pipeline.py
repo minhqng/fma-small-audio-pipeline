@@ -6,20 +6,22 @@ from pathlib import Path
 
 import pytest
 import torch
+from omegaconf import DictConfig
 
 from src.features.audio_transforms import AudioTransform
 from src.ingestion.dataset_builder import _is_silent_segment
 from src.utils.helpers import load_config, seed_everything
 
+
 class TestAudioTransform:
     """Tests for AudioTransform class."""
 
     @pytest.fixture()
-    def cfg(self):
+    def cfg(self) -> DictConfig:
         return load_config()
 
     @pytest.fixture()
-    def transform(self, cfg) -> AudioTransform:
+    def transform(self, cfg: DictConfig) -> AudioTransform:
         return AudioTransform.from_config(cfg, device=torch.device("cpu"))
 
     def test_mel_output_shape(self, transform: AudioTransform) -> None:
@@ -57,9 +59,14 @@ class TestAudioTransform:
         mel = transform.to_mel_spectrogram(short)
         assert mel.shape == (1, 128, 300), f"Padded mel wrong shape: {mel.shape}"
 
-    def test_log_epsilon_from_config(self, cfg, transform: AudioTransform) -> None:
+    def test_log_epsilon_from_config(
+        self,
+        cfg: DictConfig,
+        transform: AudioTransform,
+    ) -> None:
         """log_epsilon must equal the config value, not hardcoded."""
         assert transform.log_epsilon == cfg.audio.log_epsilon
+
 
 class TestSeedEverything:
     def test_reproducibility(self) -> None:
@@ -78,12 +85,13 @@ class TestSeedEverything:
         b = torch.randn(10)
         assert not torch.equal(a, b)
 
+
 class TestLabelMap:
     @pytest.fixture()
-    def cfg(self):
+    def cfg(self) -> DictConfig:
         return load_config()
 
-    def test_eight_genres(self, cfg) -> None:
+    def test_eight_genres(self, cfg: DictConfig) -> None:
         """FMA small has exactly 8 genres."""
         path = Path(cfg.data.label_map_path)
         if not path.exists():
@@ -96,7 +104,7 @@ class TestLabelMap:
             f"Expected {cfg.data.num_classes} genres, got {len(lm)}"
         )
 
-    def test_labels_contiguous(self, cfg) -> None:
+    def test_labels_contiguous(self, cfg: DictConfig) -> None:
         """Labels must be 0..N-1 contiguous."""
         path = Path(cfg.data.label_map_path)
         if not path.exists():
@@ -107,6 +115,7 @@ class TestLabelMap:
             pytest.skip("label_map.json is empty")
         values = sorted(lm.values())
         assert values == list(range(len(lm))), f"Non-contiguous labels: {values}"
+
 
 class TestConfig:
     def test_config_loads(self) -> None:
@@ -139,8 +148,10 @@ class TestConfig:
         assert cfg.data.metadata_path
         assert cfg.data.audio_path
 
+
 class TestSilenceGate:
     """Test the per-segment silence gate in dataset_builder."""
+
     def test_silent_segment_detected(self) -> None:
         """A constant-valued mel should be classified as silent."""
         silent_mel = torch.zeros(1, 128, 300)
