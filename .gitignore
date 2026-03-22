@@ -1,0 +1,46 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.so
+.venv/
+venv/
+env/
+.env
+*.egg-info/
+
+# --- Tooling (Ruff & Mypy) ---
+.ruff_cache/
+.mypy_cache/
+.pytest_cache/
+
+# --- Data ---
+data/**/*
+!data/stats.json
+!data/label_map.json
+!data/**/*.gitkeep
+
+# --- Large Files ---
+*.mp3
+*.wav
+*.flac
+*.zip
+*.parquet
+*.arrow
+*.pt
+*.pth
+*.ckpt
+
+# --- Debug / Temp Output ---
+test_audio.txt
+test_audio_err.txt
+
+# --- Local Docs ---
+*.docx
+
+# --- IDE & Logs ---
+.vscode/
+.idea/
+.DS_Store
+logs/
+outputs/    # Hydra outputs
+multirun/   # Hydra multirun
