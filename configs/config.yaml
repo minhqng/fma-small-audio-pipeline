@@ -15,12 +15,12 @@ data:
 audio:
   n_mels: 128
   n_fft: 1024
-  hop_length: 320         # BẮT BUỘC: 32000 * 3 / 320 = 300 frames
+  hop_length: 320         # 32000 * 3 / 320 = 300 frames
   duration: 3             # seconds
-  segment_overlap: 1.5    # 50% overlap cho Data Augmentation
+  segment_overlap: 1.5    # 50% overlap for Data Augmentation
   f_min: 0
-  f_max: 16000            # Tần số tối đa (SR/2)
-  norm_type: "slaney"     # Đồng bộ hóa với chuẩn Librosa/Torchaudio
+  f_max: 16000            # Max frequency (SR/2)
+  norm_type: "slaney"     # Synchronize with Librosa/Torchaudio standards
   target_frames: 300
   log_epsilon: 1e-9       # Epsilon for log-mel to avoid log(0)
   min_duration_s: 1.0     # Minimum valid audio duration in seconds
