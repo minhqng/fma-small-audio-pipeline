@@ -1,0 +1,40 @@
+defaults:
+  - _self_
+
+data:
+  raw_path: "data/raw"
+  metadata_path: "data/raw/fma_metadata"
+  audio_path: "data/raw/fma_small"
+  processed_path: "data/processed/fma_arrow"
+  label_map_path: "data/label_map.json"
+  stats_path: "data/stats.json"
+  sample_rate: 32000
+  num_classes: 8
+  subset: "small"         # FMA subset to use: small | medium | large
+
+audio:
+  n_mels: 128
+  n_fft: 1024
+  hop_length: 320         # BẮT BUỘC: 32000 * 3 / 320 = 300 frames
+  duration: 3             # seconds
+  segment_overlap: 1.5    # 50% overlap cho Data Augmentation
+  f_min: 0
+  f_max: 16000            # Tần số tối đa (SR/2)
+  norm_type: "slaney"     # Đồng bộ hóa với chuẩn Librosa/Torchaudio
+  target_frames: 300
+  log_epsilon: 1e-9       # Epsilon for log-mel to avoid log(0)
+  min_duration_s: 1.0     # Minimum valid audio duration in seconds
+  silence_threshold_db: -60.0  # RMS threshold (dB) below which a file is "silent"
+
+hub:
+  repo_id: "minhqng/fma-small"
+  private: true
+  token_env: "HF_TOKEN"
+
+training:
+  batch_size: 32
+  epochs: 50
+  learning_rate: 1e-4
+  seed: 2026
+  weight_decay: 1e-2
+  
