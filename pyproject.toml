@@ -1,0 +1,83 @@
+[build-system]
+# Use the latest setuptools which fully supports PEP 621 and faster editable installs
+requires = ["setuptools>=70.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]
+
+[project]
+name = "fma-small-audio-pipeline"
+version = "1.0.0"
+description = "Reproducible FMA Small audio pipeline with validation, log-mel features, artist-aware splits, and Hugging Face-ready Arrow export."
+readme = "README.md"
+requires-python = ">=3.11"
+keywords = [
+    "audio",
+    "audio-processing",
+    "data-pipeline",
+    "feature-extraction",
+    "audio-classification",
+    "fma",
+    "fma-small",
+    "pytorch",
+    "polars",
+    "hydra",
+    "huggingface-datasets"
+]
+
+dependencies = [
+    "torch>=2.10.0",            # Optimized for CUDA
+    "torchaudio>=2.10.0",       # Supports TorchCodec for GPU-based audio decoding
+    "polars>=1.38.1",           # Stable version with Lazy API and Multi-core Rust optimization
+    "datasets>=4.5.0",          # Zero-copy optimization for massive audio datasets
+    "huggingface_hub[cli]>=1.4.1",
+    "hydra-core>=1.3.2",        # Modular configuration management
+    "omegaconf>=2.3.0",         # Explicit: structured config (transitive via hydra, but explicitly declared)
+    "scikit-learn>=1.8.0",      # Updated StratifiedGroupKFold splitting algorithms
+    "pyarrow>=23.0.0",          # Backend for Polars and Datasets (Arrow IPC)
+    "numpy>=2.4.2",             # Numpy 2.x with superior vectorization performance
+    "python-dotenv>=1.0.1",
+    "tqdm>=4.67.0",
+    "av>=16.0.0",               # PyAV for FFmpeg-based audio loading
+    "fsspec==2025.10.0",        # Critical for filesystem management in Hugging Face
+    "s3fs==2025.10.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "ruff>=0.15.0",             # Unified Linter/Formatter (Rust-based)
+    "mypy>=1.14.0",             # Strict static type checking
+    "jupyterlab>=4.3.0",
+    "wandb>=0.19.0",            # Experiment tracking (Weights & Biases)
+    "ipywidgets>=8.1.0"         # Progress bar display in Notebooks
+]
+
+# --- Ruff Configuration ---
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+
+[tool.ruff.lint]
+# E: Error, F: Pyflakes, I: Isort, N: Naming, W: Warning, PL: Pylint, UP: Pyupgrade
+select = ["E", "F", "I", "N", "W", "PL", "UP"]
+ignore = ["PLR0913"]            # Ignore warnings for too many function parameters if necessary for Model initialization
+
+[tool.ruff.lint.isort]
+known-first-party = ["src"]     # Group internal project imports
+
+# --- Mypy Configuration (Strict Typing) ---
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true    # Enforce type definitions for functions
+ignore_missing_imports = true   # Ignore errors if third-party libraries lack stubs
+
+# --- Pytest Configuration ---
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-v --tb=short"
